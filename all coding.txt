@@ -1,0 +1,44 @@
+// for show lead by user name project manager
+** sukanta sir-**
+        select sa.CustId,c.Customer,p.ProjectName,ma.Area from SalesAreadb sa
+        join Customerdb c on sa.CustId=c.CustId
+        join SalesRequireinfo sr on sa.TransId=sr.TransId
+        left join ProjectDb p on p.ProjectId=sa.ProjId
+        join Citydb ct on ct.AreaId=sr.LocId
+        join MAreadb ma on ma.AreaId=ct.Area where sa.Conformation=2 and Visitflag=1 and UserName=''
+
+** end sukanta **
+** start mrinal **
+$data = lead::join('Customerdb', 'Customerdb.CustId', '=', 'SalesAreadb.CustId')
+                ->join('SalesRequireinfo', 'SalesRequireinfo.TransId', '=', 'SalesAreadb.TransId')
+                ->join('ProjectDb', 'ProjectDb.ProjectId', '=', 'SalesAreadb.ProjId')
+                ->join('Citydb', 'Citydb.AreaId', '=', 'SalesRequireinfo.LocId')
+                ->join('MAreadb', 'MAreadb.AreaId', '=', 'Citydb.Area')
+              ->where('SalesAreadb.Conformation','=','3')
+                 ->where('SalesAreadb.Visitflag','=','1')
+               ->where('SalesAreadb.UserName','=','COM00021')->simplepaginate(10);
+** end mrinal **
+
+      --------------------------------------------------------
+      //calling screen for project manager
+      ** sukanta **
+      select s.Salesflag,s.TransId,s.CustId,cb.Customer,
+      cb.Mobile,cb.Phone,ss.CustEmail,sr.Require,
+      sr.Budget,sr.Remarks,cr.Loaninfo,cr.Purpose,
+      ifnull(p.ProjectName,'')ProjectName,
+      ifnull(p.PAddress,'')PAddress,
+      s.ProjId,c.City as CityId,c.Block as ZoneId,
+      c.Area as AreaId,c.Location as LocationId,mc.City,mz.Zone,ma.Area,ml.Location,sr.LocId  from SalesAreadb s
+      join Customerdb cb on cb.CustId=s.CustId
+      join SalesRequireinfo sr on sr.TransId=s.TransId
+      join CustRequireInfo cr on cr.CustId=s.CustId
+      left join ProjectDb p on p.ProjectId=s.ProjId
+      join Citydb c on c.AreaId=sr.LocId
+      join CustSourceInfo ss on ss.CustId=s.CustId
+      join MCitydb mc on mc.CityId=c.City
+      join MZonedb mz on mz.ZoneId=c.Block
+      join MAreadb ma on ma.AreaId=c.Area
+      join MLocationdb ml on ml.LocId=c.Location where s.TransId=' ' and s.Conformation=2 and s.Salesflag!=0
+
+      **end sukanta **
+      ** mrinal **
